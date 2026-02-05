@@ -3,10 +3,9 @@
     x:Class="IndustrialLink.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:IndustrialLink"
     xmlns:views="clr-namespace:IndustrialLink.Views"
     Shell.FlyoutBehavior="Disabled"
-    Title="Industrial_Link">
+    Title="IndustrialLink">
 
     <ShellContent
         Title="Home"

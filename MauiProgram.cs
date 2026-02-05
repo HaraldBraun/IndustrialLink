@@ -21,11 +21,12 @@ namespace IndustrialLink
     		builder.Logging.AddDebug();
 #endif
 
-            // Register Views and ViewModels 
-            builder.Services.AddTransient<MainPage>( );
+            // Services
 
-            // Services, ViewModels und Views registrieren
+            // ViewModels
             builder.Services.AddSingleton<MainViewModel>( );
+
+            // Views 
             builder.Services.AddSingleton<MainPage>( );
 
             return builder.Build();

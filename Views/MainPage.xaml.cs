@@ -1,25 +1,10 @@
-﻿namespace IndustrialLink.Views
-{
-    public partial class MainPage : ContentPage
-    {
-        int count = 0;
+﻿using IndustrialLink.ViewModels;
 
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+namespace IndustrialLink.Views;
 
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+public partial class MainPage : ContentPage {
+    public MainPage( MainViewModel viewModel ) {
+        InitializeComponent( );
+        BindingContext = viewModel;
     }
-
 }

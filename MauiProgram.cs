@@ -1,4 +1,5 @@
-﻿using IndustrialLink.Views;
+﻿using IndustrialLink.ViewModels;
+using IndustrialLink.Views;
 using Microsoft.Extensions.Logging;
 
 namespace IndustrialLink
@@ -22,6 +23,10 @@ namespace IndustrialLink
 
             // Register Views and ViewModels 
             builder.Services.AddTransient<MainPage>( );
+
+            // Services, ViewModels und Views registrieren
+            builder.Services.AddSingleton<MainViewModel>( );
+            builder.Services.AddSingleton<MainPage>( );
 
             return builder.Build();
         }

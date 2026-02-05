@@ -2,7 +2,7 @@ using System;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 
-namespace Industrial_Link
+namespace IndustrialLink
 {
     internal class Program : MauiApplication
     {

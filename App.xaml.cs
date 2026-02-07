@@ -9,6 +9,17 @@ public partial class App : Application {
     }
 
     protected override Window CreateWindow( IActivationState? activationState ) {
-        return new Window( new AppShell( ) );
+        var window = new Window( new AppShell( ) );
+
+        // Initial window size and position
+        window.Width = 1024;
+        window.Height = 800;
+        window.X = 100;
+        window.Y = 100;
+
+        // Window title at runtime
+        window.Title = "IndustrialLink - Hardware Monitor";
+
+        return window;
     }
 }

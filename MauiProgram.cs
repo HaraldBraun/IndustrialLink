@@ -1,4 +1,5 @@
-﻿using IndustrialLink.ViewModels;
+﻿using IndustrialLink.Services;
+using IndustrialLink.ViewModels;
 using IndustrialLink.Views;
 using Microsoft.Extensions.Logging;
 
@@ -22,6 +23,8 @@ namespace IndustrialLink
 #endif
 
             // Services
+            builder.Services.AddSingleton<SerialPortService>( );
+            builder.Services.AddSingleton<DataStorageService>( );
 
             // ViewModels
             builder.Services.AddSingleton<MainViewModel>( );

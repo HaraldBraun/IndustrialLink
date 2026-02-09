@@ -1,39 +1,93 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:vm="clr-namespace:IndustrialLink.ViewModels"
              x:Class="IndustrialLink.Views.MainPage"
              Title="Industrial Link - Serial Monitor">
-   
-    <Grid RowDefinitions="Auto, Auto, *" Padding="20" RowSpacing="15">
-        <Label Grid.Row="0"
-               Text="{Binding StatusMessage}"
-               FontSize="18"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
-               TextColor="Black" />
-        <Button Grid.Row="1"
-                       Text="Ports scannen"
-                       Command="{Binding LoadPortsCommand}"
-                       HeightRequest="50"
-                       BackgroundColor="{StaticResource Primary}" />
 
-        <Border Grid.Row="2" StrokeThickness="1" Stroke="#CCCCCC" Padding="5">
-            <CollectionView ItemsSource="{Binding ReceivedData}">
-                <CollectionView.EmptyView>
-                    <Label Text="Noch keine Daten empfangen..."
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           TextColor="Gray" />
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Label Text="{Binding .}"
-                               FontFamily="monospace"
-                               Padding="2" />
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+    <Grid RowDefinitions="Auto, *, Auto"
+          ColumnDefinitions="350, *"
+          Padding="10"
+          RowSpacing="10"
+          ColumnSpacing="10">
+        
+        <!-- BorderLayout.North -->
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+         Text="Industrial Link System Check"
+         FontSize="24"
+         FontAttributes="Bold"
+         HorizontalOptions="Start"
+         VerticalOptions="Center"
+         TextColor="DarkBlue" />
+        
+        <!-- BorderLayout.West -->
+        <Border Grid.Row="1" Grid.Column="0"
+          Stroke="Gray" StrokeThickness="1"
+          Padding="0">
+            <Grid RowDefinitions="Auto, *">
+                <Label Grid.Row="0" Text="Communication Log"
+               BackgroundColor="LightGray" Padding="5" FontAttributes="Bold" />
+                <CollectionView Grid.Row="1" ItemsSource="{Binding ReceivedData}">
+                    <CollectionView.EmptyView>
+                        <Label Text="Keine Daten..." TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding .}"
+                           FontFamily="Courier New"
+                           FontSize="12"
+                           LineBreakMode="NoWrap"
+                           Padding="5,2" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
         </Border>
-    </Grid>
+        
+        <!-- BorderLayout.Center -->
+        <Border Grid.Row="1" Grid.Column="1"
+                Stroke="LightGray" StrokeThickness="1"
+                Padding="10" >
+            <lvc:CartesianChart
+                Series="{Binding Series}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}">
+                <lvc:CartesianChart.Title>
+                    <lvc:XamlDrawnLabelVisual
+                        Text="Messwertverlauf"
+                        TextSize="25"
+                        Padding="10"
+                        Paint="DarkSlateGray" />
+                </lvc:CartesianChart.Title>
+            </lvc:CartesianChart>
+        </Border>
+        
+        <!-- BorderLayout.South -->
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                Stroke="LightGray" StrokeThickness="1"
+                Padding="10" BackgroundColor="#F5F5F5">
+            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="20">
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Label Text="Status:" FontAttributes="Bold"/>
+                    <Label Text="{Binding StatusMessage}" TextColor="Blue"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center" HorizontalOptions="Center">
+                    <Label Text="Max. Punkte:" VerticalOptions="Center" />
+                    <Entry Text="{Binding MaxDataPoints}"
+                           Keyboard="Numeric"
+                           WidthRequest="60"
+                           HorizontalTextAlignment="Center" />
+                </HorizontalStackLayout>
+
+                <Button Grid.Column="2"
+                        Text="Ports scannen / Verbinden"
+                        Command="{Binding LoadPortsCommand}"
+                        BackgroundColor="DarkBlue"
+                        TextColor="White"
+                        HeightRequest="40"/>
+            </Grid>
+        </Border>
+    </Grid>      
 </ContentPage>

@@ -4,7 +4,12 @@ namespace IndustrialLink.Views;
 
 public partial class MainPage : ContentPage {
     public MainPage( MainViewModel viewModel ) {
-        InitializeComponent( );
-        BindingContext = viewModel;
+        try {
+            InitializeComponent( );
+            BindingContext = viewModel;
+        } catch (Exception ex ) {
+            System.Diagnostics.Debug.WriteLine( ex.ToString( ) );
+            throw;
+        }
     }
 }

@@ -1,30 +1,31 @@
 ﻿using IndustrialLink.Services;
 using IndustrialLink.ViewModels;
 using IndustrialLink.Views;
+using LiveChartsCore.SkiaSharpView.Maui;
 using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
-namespace IndustrialLink
-{
-    public static class MauiProgram
-    {
-        public static MauiApp CreateMauiApp()
-        {
+namespace IndustrialLink {
+    public static class MauiProgram {
+        public static MauiApp CreateMauiApp( ) {
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                .UseMauiApp<App>( )
+                .UseSkiaSharp( )
+                .UseLiveCharts( )
+                .ConfigureFonts( fonts => {
+                    fonts.AddFont( "OpenSans-Regular.ttf", "OpenSansRegular" );
+                    fonts.AddFont( "OpenSans-Semibold.ttf", "OpenSansSemibold" );
+                } );
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug( );
 #endif
 
             // Services
             builder.Services.AddSingleton<SerialPortService>( );
             builder.Services.AddSingleton<DataStorageService>( );
+            builder.Services.AddSingleton<MeasurementService>( );
 
             // ViewModels
             builder.Services.AddSingleton<MainViewModel>( );
@@ -32,7 +33,7 @@ namespace IndustrialLink
             // Views 
             builder.Services.AddSingleton<MainPage>( );
 
-            return builder.Build();
+            return builder.Build( );
         }
     }
 }

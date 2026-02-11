@@ -83,7 +83,7 @@
 
                 <Button Grid.Column="2"
                         Text="Ports scannen / Verbinden"
-                        Command="{Binding LoadPortsCommand}"
+                        Command="{Binding ConnectCommand}"
                         BackgroundColor="DarkBlue"
                         TextColor="White"
                         HeightRequest="40"/>

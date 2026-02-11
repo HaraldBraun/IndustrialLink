@@ -99,36 +99,36 @@ Die Views können später erweitert werden, um:
 ## 🛣️ Roadmap
 
 ### Phase 1 – Basisfunktionalität (aktuell)
-- Grundgerüst der MAUI‑App
-- Shell‑Navigation
-- Erste Views
-- Ressourcen‑ und Style‑System
-- Projektstruktur für MVVM vorbereitet
+- [x] Grundgerüst der MAUI‑App
+- [x] Shell‑Navigation
+- [x] Erste Views
+- [x] Ressourcen‑ und Style‑System
+- [x] Projektstruktur für MVVM vorbereitet
 
 ### Phase 2 – Datenanbindung
-- Implementierung eines DataService
-- Unterstützung für erste industrielle Protokolle (z. B. OPC UA, MQTT, Modbus)
-- Simulationsmodus für Testdaten
+- [ ] Implementierung eines DataService
+- [ ] Unterstützung für erste industrielle Protokolle (z. B. OPC UA, MQTT, Modbus)
+- [ ] Simulationsmodus für Testdaten
 
 ### Phase 3 – Visualisierung
-- Live‑Charts für Messwerte
-- Statusanzeigen (Ampeln, Icons, Maschinenzustände)
-- Dashboard‑System
+- [ ] Live‑Charts für Messwerte
+- [ ] Statusanzeigen (Ampeln, Icons, Maschinenzustände)
+- [ ] Dashboard‑System
 
 ### Phase 4 – Interaktion & Steuerung
-- Senden von Befehlen an Geräte
-- Benutzerrechte / Rollen
-- Logging und Audit‑Trail
+- [ ] Senden von Befehlen an Geräte
+- [ ] Benutzerrechte / Rollen
+- [ ] Logging und Audit‑Trail
 
 ### Phase 5 – Erweiterbarkeit
-- Plugin‑System für neue Datenquellen
-- Theme‑System (Dark/Light Mode)
-- Export‑/Import‑Funktionen für Konfigurationen
+- [ ] Plugin‑System für neue Datenquellen
+- [ ] Theme‑System (Dark/Light Mode)
+- [ ] Export‑/Import‑Funktionen für Konfigurationen
 
 ### Phase 6 – Deployment
-- Windows‑Installer
-- Android‑/iOS‑Builds
-- Auto‑Update‑Mechanismus
+- [ ] Windows‑Installer
+- [ ] Android‑/iOS‑Builds
+- [ ] Auto‑Update‑Mechanismus
 
 ---
 

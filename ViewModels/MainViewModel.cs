@@ -49,20 +49,28 @@ public partial class MainViewModel: ObservableObject {
 
     public ObservableCollection<string> ReceivedData { get; } = new( );
 
-    private void OnDataReceived(object sender, MeasurementEventArgs e) {
-        // Initialise graph
-        _chartValues.Add( e.Value );
+    private async void OnDataReceived( object sender, MeasurementEventArgs e ) {
+        // UI updates at MainThread (Graph & Log)
+        MainThread.BeginInvokeOnMainThread( ( ) => {
+            // Initialise graph
+            _chartValues.Add( e.Value );
 
-        // Dynamic data limitiation through UI field
-        while (_chartValues.Count > _maxDataPoints) {
-            _chartValues.RemoveAt( 0 );
+            // Dynamic data limitiation through UI field
+            while (_chartValues.Count > MaxDataPoints) {
+                _chartValues.RemoveAt( 0 );
+            }
+
+            // Update log
+            //ReceivedData.Insert( 0, $"{e.Timestamp:HH:mm:ss} -> {e.Value:F2}" );
+        } );
+
+        // Data record 
+        try {
+            // Call memory placeholder
+            await _dataStorageService.AppendMeasureAsync( e.Value, "V" );
+        } catch (Exception ex) {
+            System.Diagnostics.Debug.WriteLine( $"Fehler beim Speichern: {ex.Message}" );
         }
-
-        // Update log
-        ReceivedData.Insert( 0, $"{e.Timestamp:HH:mm:ss} -> {e.Value:F2}" );
-
-        // Call memory placeholder
-        _ = _dataStorageService.AppendMeasureAsync( e.Value, "V" );
     }
     [RelayCommand]
     private void LoadPorts( ) {
@@ -84,8 +92,12 @@ public partial class MainViewModel: ObservableObject {
     private async Task Connect( ) {
         StatusMessage = "Verbindung wird aufgebaut...";
 
+        // Start simulation
+        _measurementService.StartCapture( 500 );
+
         // Logik zum Öffnen eines Ports (Platzhalter)
         await Task.Delay( 500 );
+        StatusMessage = "Simulation läuft ...";
 
         LoadPorts( ); // Aktualisiert die Liste beim Klick
     }

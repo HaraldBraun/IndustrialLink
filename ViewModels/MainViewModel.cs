@@ -1,33 +1,51 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using IndustrialLink.Services;
+using IndustrialLink.Services.DataStorage;
+using IndustrialLink.Services.Interfaces;
+using IndustrialLink.Services.Measurement;
+using IndustrialLink.Services.SerialPorts;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.ObjectModel;
 
 namespace IndustrialLink.ViewModels;
 public partial class MainViewModel: ObservableObject {
-    private readonly SerialPortService _serialService;
-    private readonly MeasurementService _measurementService;
+    // Actual provider
+    private IMeasurementProvider _currentProvider;
+
+    // Concrete provider
+    private readonly SimulationProvider _simProvider;
+    private readonly SerialMeasurementProvider _hardwareProvider;
+
+    // Services for hardware 
     private readonly DataStorageService _dataStorageService;
+    private readonly SerialPortService _serialService;
 
     private readonly ObservableCollection<double> _chartValues = new()  { 2, 1, 3, 5, 3, 4, 6 };
     public ObservableCollection<Axis> XAxes { get; set; } = new( ) { new Axis { Name = "Zeit" } };
     public ObservableCollection<Axis> YAxes { get; set; } = new( ) { new Axis { Name = "Messwert" } };
 
+    [ObservableProperty]
+    private string _statusMessage = "Bereit zum Verbinden";
+    [ObservableProperty]
+    private bool _isHardwareMode;
     // Graph properties
     [ObservableProperty]
     private ISeries[] _series;
     [ObservableProperty]
     private int _maxDataPoints = 50; // Default 
 
-    public MainViewModel( SerialPortService serialService, MeasurementService measurement, DataStorageService storage ) {
+    public MainViewModel( SerialPortService serialService, SimulationProvider simProvider, SerialMeasurementProvider hardwareProvider, DataStorageService storage ) {
         _serialService = serialService;
-        _measurementService = measurement;
+        _simProvider = simProvider;
+        _hardwareProvider = hardwareProvider;
         _dataStorageService = storage;
 
+        // Start simulation as default
+        _currentProvider = _simProvider;
+
         // Register event
-        _measurementService.DataReceived += OnDataReceived;
+        _currentProvider.DataReceived += OnDataReceived;
 
         // Initialise graph series
         Series = new ISeries[]
@@ -44,8 +62,15 @@ public partial class MainViewModel: ObservableObject {
         LoadPorts( );
     }
 
-    [ObservableProperty]
-    private string _statusMessage = "Bereit zum Verbinden";
+    partial void OnIsHardwareModeChanged( bool value ) {
+        _currentProvider?.Stop( );
+
+        _currentProvider = value ? _hardwareProvider : _simProvider;
+
+        _currentProvider.DataReceived += OnDataReceived;
+        ReceivedData.Add( $"Modus gewechselt: {(value ? "Hardware" : "Simulation")}" );
+        // StatusMessage = $"Modus gewechselt: {(value ? "Hardware" : "Simulation")}";
+    }
 
     public ObservableCollection<string> ReceivedData { get; } = new( );
 
@@ -93,13 +118,22 @@ public partial class MainViewModel: ObservableObject {
         StatusMessage = "Verbindung wird aufgebaut...";
 
         // Start simulation
-        _measurementService.StartCapture( 500 );
+        _simProvider.StartCapture( 500 );
 
         // Logik zum Öffnen eines Ports (Platzhalter)
         await Task.Delay( 500 );
         StatusMessage = "Simulation läuft ...";
 
         LoadPorts( ); // Aktualisiert die Liste beim Klick
+    }
+
+    public void SetProvider( bool useHardware ) {
+        _currentProvider.Stop( );
+        _currentProvider.DataReceived -= OnDataReceived;
+
+        _currentProvider = useHardware ? _hardwareProvider : _simProvider;
+
+        _currentProvider.DataReceived += OnDataReceived;
     }
 }
 

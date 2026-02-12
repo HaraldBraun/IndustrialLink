@@ -13,13 +13,27 @@
           ColumnSpacing="10">
         
         <!-- BorderLayout.North -->
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*, Auto">
+            <Label Grid.Column="0"
+                   Text="Industrial Link System Check"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="DarkBlue"
+                   VerticalOptions="Center" />
+            <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                <Label Text="Simulation" VerticalOptions="Center" FontSize="12" />
+                <Switch IsToggled="{Binding IsHardwareMode}"
+                        Visual="Default" />
+                <Label Text="Hardware" VerticalOptions="Center" FontSize="12" />
+            </HorizontalStackLayout>
+        </Grid>
+        <!--<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
          Text="Industrial Link System Check"
          FontSize="24"
          FontAttributes="Bold"
          HorizontalOptions="Start"
          VerticalOptions="Center"
-         TextColor="DarkBlue" />
+         TextColor="DarkBlue" />-->
         
         <!-- BorderLayout.West -->
         <Border Grid.Row="1" Grid.Column="0"

@@ -1,4 +1,6 @@
-﻿using IndustrialLink.Services;
+﻿using IndustrialLink.Services.DataStorage;
+using IndustrialLink.Services.Measurement;
+using IndustrialLink.Services.SerialPorts;
 using IndustrialLink.ViewModels;
 using IndustrialLink.Views;
 using LiveChartsCore.SkiaSharpView.Maui;
@@ -25,7 +27,8 @@ namespace IndustrialLink {
             // Services
             builder.Services.AddSingleton<SerialPortService>( );
             builder.Services.AddSingleton<DataStorageService>( );
-            builder.Services.AddSingleton<MeasurementService>( );
+            builder.Services.AddSingleton<SimulationProvider>( );
+            builder.Services.AddSingleton<SerialMeasurementProvider>( );
 
             // ViewModels
             builder.Services.AddSingleton<MainViewModel>( );

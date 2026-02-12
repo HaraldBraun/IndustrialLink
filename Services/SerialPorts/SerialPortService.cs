@@ -1,6 +1,6 @@
 ﻿using System.IO.Ports;
 
-namespace IndustrialLink.Services;
+namespace IndustrialLink.Services.SerialPorts;
 
 public class SerialPortService {
     public List<string> GetAvailablePorts() {

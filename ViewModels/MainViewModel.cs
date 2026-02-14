@@ -24,11 +24,14 @@ public partial class MainViewModel: ObservableObject {
     private readonly ObservableCollection<double> _chartValues = new()  { 2, 1, 3, 5, 3, 4, 6 };
     public ObservableCollection<Axis> XAxes { get; set; } = new( ) { new Axis { Name = "Zeit" } };
     public ObservableCollection<Axis> YAxes { get; set; } = new( ) { new Axis { Name = "Messwert" } };
+    public ObservableCollection<string> AvailablePorts { get; } = new( );
 
     [ObservableProperty]
     private string _statusMessage = "Bereit zum Verbinden";
     [ObservableProperty]
     private bool _isHardwareMode;
+    [ObservableProperty]
+    private string _selectedPort;
     // Graph properties
     [ObservableProperty]
     private ISeries[] _series;
@@ -63,13 +66,11 @@ public partial class MainViewModel: ObservableObject {
     }
 
     partial void OnIsHardwareModeChanged( bool value ) {
-        _currentProvider?.Stop( );
+        // Calls SetProvider method
+        SetProvider( value );
 
-        _currentProvider = value ? _hardwareProvider : _simProvider;
-
-        _currentProvider.DataReceived += OnDataReceived;
-        ReceivedData.Add( $"Modus gewechselt: {(value ? "Hardware" : "Simulation")}" );
-        // StatusMessage = $"Modus gewechselt: {(value ? "Hardware" : "Simulation")}";
+        // Feedback in Log
+        StatusMessage = value ? "Modus gewechselt: Hardware" : "Modus gewechselt: Simulation";
     }
 
     public ObservableCollection<string> ReceivedData { get; } = new( );
@@ -99,17 +100,18 @@ public partial class MainViewModel: ObservableObject {
     }
     [RelayCommand]
     private void LoadPorts( ) {
-        ReceivedData.Clear( );
+        AvailablePorts.Clear( );
         var ports = _serialService.GetAvailablePorts();
 
+        foreach (var port in ports) {
+            AvailablePorts.Add( $"Gefundener Port: {port}" );
+        }
+
         if (ports.Any( )) {
-            foreach (var port in ports) {
-                ReceivedData.Add( $"Gefundener Port: {port}" );
-            }
-            StatusMessage = $"{ports.Count} Port(s) gefunden.";
+            SelectedPort = AvailablePorts[0];
+            StatusMessage = $"{AvailablePorts.Count} Port(s) gefunden.";
         } else {
-            StatusMessage = "Keine COM-Ports gefunden.";
-            ReceivedData.Add( "Hinweis: Schliessen Sie ein USB-Gerät an." );
+            StatusMessage = "Kein Gerät gefunden.";
         }
     }
 
@@ -118,13 +120,30 @@ public partial class MainViewModel: ObservableObject {
         StatusMessage = "Verbindung wird aufgebaut...";
 
         // Start simulation
-        _simProvider.StartCapture( 500 );
+        _currentProvider.Start( 500 );
 
         // Logik zum Öffnen eines Ports (Platzhalter)
         await Task.Delay( 500 );
-        StatusMessage = "Simulation läuft ...";
+        StatusMessage = IsHardwareMode ? "Hardware-Messung läuft ..." : "Simulation läuft ...";
 
         LoadPorts( ); // Aktualisiert die Liste beim Klick
+    }
+
+    [RelayCommand]
+    private void Start( ) {
+        if (IsHardwareMode && string.IsNullOrEmpty( SelectedPort )) {
+            StatusMessage = "Bitte zuerst einen Port wählen!";
+            return;
+        }
+
+        _currentProvider.Start( 500 );
+        StatusMessage = IsHardwareMode ? $"Messung auf {SelectedPort} ..." : "Simulation läuft ...";
+    }
+
+    [RelayCommand]
+    private void Stop( ) {
+        _currentProvider?.Stop( );
+        StatusMessage = "Aufzeichnung gestoppt.";
     }
 
     public void SetProvider( bool useHardware ) {

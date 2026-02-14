@@ -20,21 +20,46 @@
                    FontAttributes="Bold"
                    TextColor="DarkBlue"
                    VerticalOptions="Center" />
-            <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                <Label Text="Simulation" VerticalOptions="Center" FontSize="12" />
-                <Switch IsToggled="{Binding IsHardwareMode}"
-                        Visual="Default" />
-                <Label Text="Hardware" VerticalOptions="Center" FontSize="12" />
-            </HorizontalStackLayout>
+            <Grid Grid.Column="1" 
+                  ColumnDefinitions="Auto, 60, Auto" 
+                  VerticalOptions="Center" 
+                  HorizontalOptions="End" 
+                  ColumnSpacing="5">
+                <Label Grid.Column="0" 
+                       Text="Simulation" 
+                       VerticalOptions="Center" 
+                       FontSize="14" >
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding IsHardwareMode}"
+                                     Value="False">
+                            <Setter Property="FontAttributes" Value="Bold" />
+                            <Setter Property="TextColor" Value="DarkBlue" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Switch Grid.Column="1" 
+                        IsToggled="{Binding IsHardwareMode}"
+                        WidthRequest="50"
+                        Margin="5"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                <Label Grid.Column="2" 
+                       Text="Hardware" 
+                       VerticalOptions="Center" 
+                       FontSize="14">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" 
+                                     Binding="{Binding IsHardwareMode}"
+                                     Value="True">
+                            <Setter Property="FontAttributes" Value="Bold" />
+                            <Setter Property="TextColor" Value="DarkBlue" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Grid>
         </Grid>
-        <!--<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-         Text="Industrial Link System Check"
-         FontSize="24"
-         FontAttributes="Bold"
-         HorizontalOptions="Start"
-         VerticalOptions="Center"
-         TextColor="DarkBlue" />-->
-        
+
         <!-- BorderLayout.West -->
         <Border Grid.Row="1" Grid.Column="0"
           Stroke="Gray" StrokeThickness="1"
@@ -81,26 +106,43 @@
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                 Stroke="LightGray" StrokeThickness="1"
                 Padding="10" BackgroundColor="#F5F5F5">
-            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="20">
-                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                    <Label Text="Status:" FontAttributes="Bold"/>
-                    <Label Text="{Binding StatusMessage}" TextColor="Blue"/>
+            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10">
+                <HorizontalStackLayout Grid.Column="0" Spacing="5" VerticalOptions="Center">
+                    <Label Text="Status:" FontAttributes="Bold" VerticalOptions="Center"/>
+                    <Label Text="{Binding StatusMessage}" TextColor="Blue" VerticalOptions="Center"/>
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center" HorizontalOptions="Center">
-                    <Label Text="Max. Punkte:" VerticalOptions="Center" />
+                    <Button Text="Scan"
+                            Command="{Binding LoadPortsCommand}" MinimumWidthRequest="80" BackgroundColor="#6E6E6E"/>
+
+                    <Picker Title="Port wählen"
+                            ItemsSource="{Binding AvailablePorts}"
+                            SelectedItem="{Binding SelectedPort}"
+                            WidthRequest="120"
+                            VerticalOptions="Center"
+                            TextColor="Blue"/>
+
+                    <Label Text="Max. Punkte:" VerticalOptions="Center" Margin="10,0,0,0"
+                           TextColor="Blue"/>
                     <Entry Text="{Binding MaxDataPoints}"
                            Keyboard="Numeric"
                            WidthRequest="60"
-                           HorizontalTextAlignment="Center" />
-                </HorizontalStackLayout>
+                           HorizontalTextAlignment="Center"/>
 
-                <Button Grid.Column="2"
-                        Text="Ports scannen / Verbinden"
-                        Command="{Binding ConnectCommand}"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        HeightRequest="40"/>
+                    <Button Text="Start"
+                            Command="{Binding StartCommand}"
+                            BackgroundColor="DarkGreen"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            MinimumWidthRequest="80"/>
+
+                    <Button Text="Stop"
+                            Command="{Binding StopCommand}"
+                            BackgroundColor="DarkRed"
+                            TextColor="White"
+                            MinimumWidthRequest="80"/>
+                </HorizontalStackLayout>
             </Grid>
         </Border>
     </Grid>      

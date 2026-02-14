@@ -24,6 +24,14 @@ namespace IndustrialLink {
             builder.Logging.AddDebug( );
 #endif
 
+            Microsoft.Maui.Handlers.SwitchHandler.Mapper.AppendToMapping( "NoLabel", ( handler, view ) => {
+#if WINDOWS
+            handler.PlatformView.OnContent = null;
+            handler.PlatformView.OffContent = null;
+            handler.PlatformView.MinWidth = 0;
+#endif
+            } );
+
             // Services
             builder.Services.AddSingleton<SerialPortService>( );
             builder.Services.AddSingleton<DataStorageService>( );
